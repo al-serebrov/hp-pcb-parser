@@ -1,0 +1,15 @@
+<form method="GET">
+<select name="catalogs" id="cats">
+	{% for cat in catalogs %}
+	<option value={{ cat.code }} id={{ cat.id }}>{{ cat.name }}</option>
+	{% endfor %}
+</select>
+Part Number: <input type="text" name="part_number" id="pnum">
+
+<script type="text/javascript">
+var e = document.getElementById("cats");
+var strCat = e.options[e.selectedIndex].value;
+</script>
+
+<input type="button" onclick="window.location.href = document.getElementById('pnum').value + '?' + document.getElementById('cats').options[document.getElementById('cats').selectedIndex].value;" value="Submit" />
+</form>

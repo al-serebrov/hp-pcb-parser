@@ -3,9 +3,10 @@ Retrieve images information from HP Product Content Browser.
 """
 
 import requests
+from json import JSONDecodeError
 
 
-def get_images_info(part_number):
+def get_images_info(part_number, market='us-en'):
     """
     Get images infromation from HP PCB.
 
@@ -50,11 +51,13 @@ def get_images_info(part_number):
             """
     resp = requests.get(
         'https://pcb.itcs.hp.com/api/catalogs/us-en/\
-    nodes/search/autocomplete?query={}&status[]=O&status[]=L'
+nodes/search/autocomplete?query={}&status[]=O&status[]=L'
         .format(part_number)
     )
-
-    results = resp.json().get('results')
+    try:
+        results = resp.json().get('results')
+    except JSONDecodeError:
+        return {'Bad request': 'No such PN in this market'}
 
     oids = [res.get('oid') for res in results]
 
@@ -62,7 +65,7 @@ def get_images_info(part_number):
     for oid in oids:
         resp = requests.get(
             'https://pcb.itcs.hp.com/api/catalogs/\
-    us-en/nodes/{}/contents/I?status[]=O&status[]=L&hierParadigm=F'.format(oid)
+us-en/nodes/{}/contents/I?status[]=O&status[]=L&hierParadigm=F'.format(oid)
         )
         images_info.append(resp.json())
     return images_info
