@@ -50,9 +50,9 @@ def get_images_info(part_number, market='us-en'):
             ]
             """
     resp = requests.get(
-        'https://pcb.itcs.hp.com/api/catalogs/us-en/\
-nodes/search/autocomplete?query={}&status[]=O&status[]=L'
-        .format(part_number)
+        'https://pcb.itcs.hp.com/api/catalogs/{0}/\
+nodes/search/autocomplete?query={1}&status[]=O&status[]=L'
+        .format(market, part_number)
     )
     try:
         results = resp.json().get('results')
@@ -65,7 +65,8 @@ nodes/search/autocomplete?query={}&status[]=O&status[]=L'
     for oid in oids:
         resp = requests.get(
             'https://pcb.itcs.hp.com/api/catalogs/\
-us-en/nodes/{}/contents/I?status[]=O&status[]=L&hierParadigm=F'.format(oid)
+{0}/nodes/{1}/contents/I?status[]=O&status[]=L&hierParadigm=F'
+            .format(market, oid)
         )
         images_info.append(resp.json())
     return images_info

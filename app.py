@@ -2,7 +2,7 @@ import json
 
 from parser import parser
 
-from flask import Flask, abort, render_template, request
+from flask import Flask, render_template, request
 
 
 app = Flask(__name__)
@@ -20,8 +20,15 @@ def get_index():
 
 @app.route('/<part_number>', methods=['GET'])
 def get_images(part_number):
-    images_info = parser.get_images_info(part_number)
-    return render_template('images.html', images_info=images_info)
+    market = request.args.get("market", "us-en")
+    images_info = parser.get_images_info(part_number, market)
+    parsed_contents = []
+    for image_info in images_info:
+        contents = image_info.get('contents')
+        for content in contents:
+            parsed_contents.append(content)
+    sorted_contents = sorted(parsed_contents, key=lambda k: k['fileSize'])
+    return render_template('images.html', contents=reversed(sorted_contents))
 
 
 if __name__ == '__main__':
