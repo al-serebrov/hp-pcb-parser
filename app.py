@@ -1,4 +1,5 @@
 import json
+import os
 
 from parser import parser
 
@@ -32,4 +33,4 @@ def get_images(part_number):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=os.environ.get('PORT') or 8080)
