@@ -1,0 +1,12 @@
+version: '3'
+services:
+  hp-pcb:
+    container_name: hp-pcb
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/code
+    command: python /code/app.py
